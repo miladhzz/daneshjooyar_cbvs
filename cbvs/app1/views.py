@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.views import generic
 
 
@@ -13,4 +13,10 @@ def user_list(mmm):
 
 class UserList2(generic.ListView):
     model = User
+
+
+class GroupList(generic.ListView):
+    model = Group
+    test = 'test'
+
 
