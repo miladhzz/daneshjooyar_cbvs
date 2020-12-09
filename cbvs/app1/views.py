@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User, Group
 from django.views import generic, View
+from django.urls import reverse_lazy, reverse
 
 
 class UserList3(generic.base.TemplateView):
@@ -22,7 +23,7 @@ class GroupList(generic.ListView):
     # queryset = Group.objects.filter(name__startswith="My11")
 
     def get_queryset(self):
-        return Group.objects.filter(name__startswith="My")
+        return Group.objects.all()
 
 
 class GroupDetail(generic.DetailView):
@@ -35,3 +36,11 @@ class GroupDetail(generic.DetailView):
         return get_object_or_404(Group, id=id, name=groupname)
 
 
+class CreateGroup(generic.CreateView):
+    model = Group
+    fields = ["name"]
+    success_url = reverse_lazy("group_list2")
+    initial = {"name": "Test Name"}
+
+    # def get_success_url(self):
+    #     return reverse("group_detail", args=[self.object.id, self.object.name])
