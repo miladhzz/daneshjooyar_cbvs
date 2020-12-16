@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User, Group
 from django.views import generic, View
 from django.urls import reverse_lazy, reverse
+from . import forms
 
 
 class UserList3(generic.base.TemplateView):
@@ -44,3 +45,26 @@ class CreateGroup(generic.CreateView):
 
     # def get_success_url(self):
     #     return reverse("group_detail", args=[self.object.id, self.object.name])
+
+
+class UpdateGroup(generic.UpdateView):
+    model = Group
+    fields = ["name"]
+
+    def get_success_url(self):
+        return reverse("group_detail", args=[self.object.id, self.object.name])
+
+
+class DeleteGroup(generic.DeleteView):
+    model = Group
+    success_url = reverse_lazy('group_list2')
+
+
+class GroupForm(generic.FormView):
+    form_class = forms.GroupForm
+    template_name = "auth/group_form.html"
+    success_url = reverse_lazy('group_list2')
+
+    def form_valid(self, form):
+        Group.objects.create(name=form.cleaned_data["name"])
+        return super(GroupForm, self).form_valid(form)
