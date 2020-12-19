@@ -1,70 +1,31 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User, Group
 from django.views import generic, View
 from django.urls import reverse_lazy, reverse
 from . import forms
+from django.contrib.auth.forms import UserCreationForm
 
 
-class UserList3(generic.base.TemplateView):
-    template_name = 'app1/user_list.html'
-
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['users'] = User.objects.all()
-    #     return context
-
-    extra_context = {'users': User.objects.all()}
+class UserList(generic.ListView):
+    model = User
 
 
-class GroupList(generic.ListView):
-    model = Group
-    paginate_by = 2
-    # allow_empty = False
-    # queryset = Group.objects.filter(name__startswith="My11")
-
-    def get_queryset(self):
-        return Group.objects.all()
+class UserDetail(generic.DetailView):
+    model = User
 
 
-class GroupDetail(generic.DetailView):
-    model = Group
-    pk_url_kwarg = 'id'
+class RegisterUser(generic.CreateView):
+    model = User
+    # fields = ["username", "password", "first_name", "last_name"]
+    form_class = forms.UserRegisterForm
+    # success_url = reverse_lazy("user_list")
 
-    def get_object(self, queryset=None):
-        id = self.kwargs.get('id')
-        groupname = self.kwargs.get('groupname')
-        return get_object_or_404(Group, id=id, name=groupname)
-
-
-class CreateGroup(generic.CreateView):
-    model = Group
-    fields = ["name"]
-    success_url = reverse_lazy("group_list2")
-    initial = {"name": "Test Name"}
-
-    # def get_success_url(self):
-    #     return reverse("group_detail", args=[self.object.id, self.object.name])
-
-
-class UpdateGroup(generic.UpdateView):
-    model = Group
-    fields = ["name"]
+    # def form_valid(self, form):
+    #     user = form.save(commit=False)
+    #     user.set_password(form.cleaned_data["password"])
+    #     user.save()
+    #     return HttpResponseRedirect(reverse("user_detail", args=[user.id, ]))
 
     def get_success_url(self):
-        return reverse("group_detail", args=[self.object.id, self.object.name])
-
-
-class DeleteGroup(generic.DeleteView):
-    model = Group
-    success_url = reverse_lazy('group_list2')
-
-
-class GroupForm(generic.FormView):
-    form_class = forms.GroupForm
-    template_name = "auth/group_form.html"
-    success_url = reverse_lazy('group_list2')
-
-    def form_valid(self, form):
-        Group.objects.create(name=form.cleaned_data["name"])
-        return super(GroupForm, self).form_valid(form)
+        return reverse("user_detail", args=[self.object.id, ])
