@@ -5,6 +5,7 @@ from django.views import generic, View
 from django.urls import reverse_lazy, reverse
 from . import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.views import LoginView
 
 
 class UserList(generic.ListView):
@@ -29,3 +30,5 @@ class RegisterUser(generic.CreateView):
 
     def get_success_url(self):
         return reverse("user_detail", args=[self.object.id, ])
+
+
