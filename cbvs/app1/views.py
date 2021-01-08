@@ -6,6 +6,7 @@ from django.urls import reverse_lazy, reverse
 from . import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView
+from django.utils import timezone
 
 
 class UserList(generic.ListView):
@@ -14,21 +15,45 @@ class UserList(generic.ListView):
 
 class UserDetail(generic.DetailView):
     model = User
+    count = 0
+    test = None
+
+    def get_context_data(self, **kwargs):
+        self.test = "test1"
+        self.count += 1
+        print("get_context_data", self.count)
+        context = super(UserDetail, self).get_context_data(**kwargs)
+        context["user_count"] = User.objects.count
+        return context
+
+    def get_object(self, queryset=None):
+        self.count += 1
+        print("get_object", self.count)
+        user = super(UserDetail, self).get_object(queryset)
+        user.last_login = timezone.now()
+        user.save()
+        return user
+
+    def get(self, request, *args, **kwargs):
+        self.count += 1
+        print("get", self.count)
+        return super(UserDetail, self).get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        print(self.test)
+        self.count += 1
+        print("get_queryset", self.count)
+        return super(UserDetail, self).get_queryset()
 
 
-class RegisterUser(generic.CreateView):
-    model = User
-    # fields = ["username", "password", "first_name", "last_name"]
-    form_class = forms.UserRegisterForm
-    # success_url = reverse_lazy("user_list")
+class UserGroupList(generic.ListView):
+    template_name = "auth/user_group_list.html"
 
-    # def form_valid(self, form):
-    #     user = form.save(commit=False)
-    #     user.set_password(form.cleaned_data["password"])
-    #     user.save()
-    #     return HttpResponseRedirect(reverse("user_detail", args=[user.id, ]))
+    def get_queryset(self):
+        self.group = Group.objects.get(name=self.kwargs["group"])
+        return User.objects.filter(groups=self.group)
 
-    def get_success_url(self):
-        return reverse("user_detail", args=[self.object.id, ])
-
-
+    def get_context_data(self, **kwargs):
+        context = super(UserGroupList, self).get_context_data(**kwargs)
+        context["group_name"] = self.group
+        return context

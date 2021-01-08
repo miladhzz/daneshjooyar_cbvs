@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Group List</title>
+</head>
+<body>
+    Group Name: {{ group_name }}
+    <hr />
+    <ul>
+        {% for user in user_list %}
+            <li>{{ user.username }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
