@@ -9,4 +9,5 @@ urlpatterns = [
     path('', views.UserList.as_view(), name="user_list"),
     path('user-detail/<int:pk>/', views.UserDetail.as_view(), name="user_detail"),
     path('user-group-list/<str:group>/', views.UserGroupList.as_view(), name="user_group_list"),
+    path('user-edit/<int:pk>/', views.UserEdit.as_view(), name="user_edit"),
 ]

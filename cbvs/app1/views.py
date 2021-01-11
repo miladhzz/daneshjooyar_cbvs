@@ -57,3 +57,21 @@ class UserGroupList(generic.ListView):
         context = super(UserGroupList, self).get_context_data(**kwargs)
         context["group_name"] = self.group
         return context
+
+
+class UserEdit(generic.UpdateView):
+    model = User
+    form_class = forms.UserEditForm
+    template_name = "app1/user-edit.html"
+    # success_url = reverse_lazy('user_list')
+
+    def get_success_url(self):
+        return reverse('user_detail', args=[self.object.id])
+
+    def form_valid(self, form):
+        print("form_valid")
+        return super().form_valid(form)
+
+    def post(self, request, *args, **kwargs):
+        print("post")
+        return super(UserEdit, self).post(request, *args, **kwargs)
