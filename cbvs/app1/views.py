@@ -7,6 +7,7 @@ from . import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView
 from django.utils import timezone
+from django.http import JsonResponse
 
 
 class UserList(generic.ListView):
@@ -75,3 +76,20 @@ class UserEdit(generic.UpdateView):
     def post(self, request, *args, **kwargs):
         print("post")
         return super(UserEdit, self).post(request, *args, **kwargs)
+
+
+class UserGroupAjax(generic.TemplateView):
+    template_name = "app1/user-group-ajax.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(UserGroupAjax, self).get_context_data(**kwargs)
+        context["groups"] = Group.objects.all()
+        return context
+
+
+class UsersAjax(generic.View):
+
+    def get(self, request):
+        group_id = request.GET.get('group')
+        users = User.objects.filter(groups=group_id).values('id', 'username')
+        return JsonResponse(list(users), safe=False)
