@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Group Ajax</title>
+</head>
+<body>
+    Group:
+    <select name="groups" id="groups">
+        <option value="0">Select group...</option>
+        {% for group in groups %}
+            <option value="{{ group.id }}">{{ group.name }}</option>
+        {% endfor %}
+    </select>
+    <hr />
+    <div>
+        <ul id="user">
+
+        </ul>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $("#groups").change(function(){
+
+            $("#user").empty();
+            var groupId = $(this).val();
+
+            $.ajax({
+
+                url: "http://127.0.0.1:8000/users-ajax/",
+                dataType: "json",
+                data: {
+                    'group': groupId
+                },
+                success: function (data){
+
+                    console.log(data);
+                    $.map(data, function(value){
+
+                        $("#user").append('<li>' + value.username + '</li>');
+
+                    });
+
+                }
+
+            });
+
+        });
+    </script>
+</body>
+</html>
