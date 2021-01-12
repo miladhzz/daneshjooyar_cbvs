@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User</title>
+</head>
+<body>
+    <h3>User: {{ object.username }}</h3>
+    <hr />
+    <form method="post">
+        <table>
+        {{ form.as_table }}
+        </table>
+        {% csrf_token %}
+        <input type="submit" value="Save">
+    </form>
+</body>
+</html>

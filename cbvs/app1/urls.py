@@ -10,6 +10,4 @@ urlpatterns = [
     path('user-detail/<int:pk>/', views.UserDetail.as_view(), name="user_detail"),
     path('user-group-list/<str:group>/', views.UserGroupList.as_view(), name="user_group_list"),
     path('user-edit/<int:pk>/', views.UserEdit.as_view(), name="user_edit"),
-    path('user-group-ajax/', views.UserGroupAjax.as_view(), name="user_group_ajax"),
-    path('users-ajax/', views.UsersAjax.as_view(), name="users_ajax"),
 ]
