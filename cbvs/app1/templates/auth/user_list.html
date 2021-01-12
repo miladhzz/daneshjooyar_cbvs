@@ -6,7 +6,7 @@
 </head>
 <body>
 {% for user in user_list %}
-    <h4><a href="{% url 'user_edit' user.id %}">{{user.username}}</a></h4>
+    <h4>{{user.username}}</h4>
     user ID: {{ user.id }}
 {% endfor %}
 </body>
