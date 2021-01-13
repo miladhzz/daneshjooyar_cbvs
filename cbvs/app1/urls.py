@@ -1,8 +1,6 @@
 from django.urls import path
 from . import views
-from django.views.generic import ListView, TemplateView
-from django.contrib.auth.models import Group
-from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetConfirmView
+from django.contrib.auth.views import LoginView, LogoutView
 
 
 urlpatterns = [
@@ -12,4 +10,6 @@ urlpatterns = [
     path('user-edit/<int:pk>/', views.UserEdit.as_view(), name="user_edit"),
     path('user-group-ajax/', views.UserGroupAjax.as_view(), name="user_group_ajax"),
     path('users-ajax/', views.UsersAjax.as_view(), name="users_ajax"),
+    path('login/', LoginView.as_view(), name="login"),
+    path('logout/', LogoutView.as_view(template_name='registration/logout.html'), name="logout"),
 ]
